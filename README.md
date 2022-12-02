@@ -6,7 +6,7 @@ This repository contains source code and data accompanying the paper "Semantic C
 
 > Stewart Greenhill, Majid Abdolshah, Vuong Le, Sunil Gupta, Svetha Venkatesh. "Semantic Control of Generative Musical Attributes", in Proceedings of the 23rd International Society for Music Information Retrieval Conference (ISMIR), 2022.
 
-Semantic Neural Latent Traversal (aka "SeNT")  is an algorithm for nagivating the latent spaces of generative neural networks such as VAEs and GANs. Previous approaches to achieving controllability have focused on regularisation and disentanglement, so that each semantic attribute is linearly related to a dimension of the latent space. The SeNT method uses a secondary neural network to learn the relationship between semantic attributes and latent dimensions.
+Semantic Neural Latent Traversal (aka "SeNT")  is an algorithm for navigating the latent spaces of generative neural networks such as VAEs and GANs. Previous approaches to achieving controllability have focused on regularisation and disentanglement, so that each semantic attribute is linearly related to a dimension of the latent space. The SeNT method uses a secondary neural network to learn the relationship between semantic attributes and latent dimensions.
 
 We demonstrate the SeNT method using the [dMelodies data-set](https://github.com/ashispati/dmelodies_dataset) which contains a database of algorithmically-generated two-bar melodies and their features. We also use a set of generative VAE models from the [dMelodies controllability](https://github.com/ashispati/dmelodies_controllability) paper. These code-bases are included as sub-modules of this Git repository. For technical reasons (see below) we are using forks of the original two repositories.
 
@@ -14,7 +14,7 @@ We demonstrate the SeNT method using the [dMelodies data-set](https://github.com
 
 * Install `anaconda` or `miniconda` as described [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). For reference, this software was developed using miniconda (version 4.10.3) with python 3.7.2.
 
-* Re-running these experiments from scratch will require a lot of computing time on large machines. As a short-cut we have provided some pre-built data which can be used as described below. These large files (around 1.5Gb in the "prebuilt" directory)  are stored on Git-LFS. To retreive these files (and the original dmelodies data set) ensure that you install the Git LFS extension as described [here](https://git-lfs.github.com/). Otherwise, the repository will be retreived with pointers to these large files.
+* Re-running these experiments from scratch will require a lot of computing time on large machines. As a short-cut we provide some pre-built data which can be used as described below. These large files (around 1.5Gb in the "prebuilt" directory)  are stored on Git-LFS. To retrieve these files (and the original dmelodies data set) ensure that you install the Git LFS extension as described [here](https://git-lfs.github.com/). Otherwise, the repository will be retrieved with pointers to these large files, which can be retrieved separately via git or the github web interface.
 
 * Clone this repository using the `--recurse-submodules` flag, which will automatically include the required sub-modules: *dmelodies_dataset* and *dmelodies_controllability*.
 
@@ -41,7 +41,7 @@ Please first review the included `#SBATCH` options and adjust for your local sys
 
 ### 2) Train the dMelodies VAE Models
 
-We use the VAE models publshed in [dmelodies_controllability](https://github.com/ashispati/dmelodies_controllability). These should be trained using the original scripts. Our forked version modifies the process slightly, to allow more control of partitioning of the data between training, validation and testing. The original hard-codes a 71/20/10 split, but this does not leave enough data for training our secondary SeNT neural network model. We introduced the --split option to allow an alternative split.
+We use the VAE models published in [dmelodies_controllability](https://github.com/ashispati/dmelodies_controllability). These should be trained using the original scripts. Our forked version modifies the process slightly, to allow more control of partitioning of the data between training, validation and testing. The original hard-codes a 71/20/10 split, but this does not leave enough data for training our secondary SeNT neural network model. We introduced the --split option to allow an alternative split.
 
 To build the VAE models from scratch:
 
@@ -56,7 +56,7 @@ tar xzf prebuilt/vae-models.tar.gz
 
 ### 3) Import latent codes  and features for SeNT Training
 
-To train the SeNT models we need latent positions and their corresonding features, arranged in pairs that are exemplars of attribute changes. This process is done in two stages:
+To train the SeNT models we need latent positions and their corresponding features, arranged in pairs that are exemplars of attribute changes. This process is done in two stages:
 
 * Extract a set of latent codes and their corresponding features. This is done using the `dmgenerate` utility, which enumerates the testing samples for a specific model.
 
@@ -131,7 +131,7 @@ This repository includes:
     * `Find_MI.py` : evaluate mutual information for loss functions in SeNT training
     * `util.py` and `build.py` : utility functions for creating and reading repository of training data
     * `dmgenerate.py` : generation of training data from dMelodies VAE models
-    * `dmutil.py` : utility functionsfor handling dMelodies VAE models
+    * `dmutil.py` : utility functions for handling dMelodies VAE models
     * `Evaluate.py` : main driver for training and testing SeNT models
     
 * `prebuilt` : pre-built data sets
@@ -140,24 +140,26 @@ This repository includes:
     
 * `scripts` : assorted scripts used for training and evaluating the models
     * `post` : performance analysis and post-processing scripts
+    
+* `results` : sample result files
 
 ## Implementation Details
 
 The dMelodies data contains 1354752 algorithmically-generated two-bar  melodies and their features. This data is stored in the file:
 > dmelodies_controllability/dmelodies_dataset/data/dMelodies_dataset.npz
 
- which contains a `score_array` with 16 note values for two bars of quarter notes, and `latent_array` with the features for each sample. This file is roughly 130Mb in size, and if `git lfs` has not been used will be a pointer file. If the data file is not present, follow the instructions in dmelodies_controllability/dmelodies_dataset/README.md to generate the dataset, or install git lfs to retreive the original file.
+ which contains a `score_array` with 16 note values for two bars of quarter notes, and `latent_array` with the features for each sample. This file is roughly 130Mb in size, and if `git lfs` has not been used will be a pointer file. If the data file is not present, follow the instructions in dmelodies_controllability/dmelodies_dataset/README.md to generate the dataset, or install git lfs to retrieve the original file.
  
  The dMelodies data is partitioned into training/validation/testing subsets. By default the allocation is 70/20/10 percent of the samples in each subset. Since the "testing" subset must be sufficient for additional training and testing of the SeNT models we change the default allocation to 70/5/25, which yields 338688 samples for training and testing the SeNT models. 
  
- Four VAE model types are used here: beta-VAE, ar-VAE, interp-VAE, s3-VAE. For each of these types, we train three hyper-parameter settings with three random seeds, a total of 36 models. The trained VAE models are stored in
+ Four VAE model types are used here: beta-VAE, ar-VAE, interp-VAE, s2-VAE. For each of these types, we train three hyper-parameter settings with three random seeds, a total of 36 models. The trained VAE models are stored in
  > dmelodies_controllability/src/saved_models-70-05-25
  
  which includes a serialised pyTorch neural network for each model. Note that this naming scheme is slightly different to the original, to allow for multiple VAE model sets with different partitioning of the data.
  
 To train the SeNT models, we extract the latent codes and features from the VAE "testing" data. This data is stored in a ".npz" file of roughly 64Mb, which includes a 338688 x 32 "latent_codes" array, and a 338688 x 9 "attributes" array. The resulting data set is about 2.4Gb in size.
 
-We then search the training data for pairs of samples that represent good exemples of attribute changes. This process can be quite time consuming since it is O(N<sup>2</sup>) for a N data points. We use two methods to optimise the search:
+We then search the training data for pairs of samples that represent good examples of attribute changes. This process can be quite time consuming since it is O(N<sup>2</sup>) for a N data points. We use two methods to optimise the search:
 
 * The attribute changes depends only on the attributes, and not the latent codes. Attribute sequencing is determined by the choice of random seed. Thus for the 36 models, we only need to compute one sequence of pairs for each attribute for each of the three random seeds, a total of 27 sequences.
 * Computation of pairs turns out to be slow when implemented in Python (see build.py:gen). Instead the procedure is implemented in C (see findpairs.c).
@@ -176,7 +178,7 @@ The training data for the next stage is stored in:
  * `fnames` are the names of the features
  * `ttPairs` are the indices in the `pairs` sequences corresponding to training / testing subsets for each feature
  
- The main implementation for the SeNT training is in NeuralTraversal2.py. Probably the most complex aspect of this training is the computation of the perceptual loss term. Given a latent code we must determine the resulting feature so we can evaluate its deviation from `c2`, the intended feature value. We use the decoder of the original VAE model to get the value of the feature (via `decodeFeatures`) but to successfuly backpropagate this loss term we also need its gradient. Because of the complexity of this term its gradient is unavailable through the pyTorch auto-differentiation framework. Therefore we use separate "Z to C" neural network as a surrogate to approximate the gradient. This is trained on the original data, but will be smoother than the true gradient since it doesn't see invalid states that are sometimes generated by the VAE decoder.
+ The main implementation for the SeNT training is in NeuralTraversal2.py. Probably the most complex aspect of this training is the computation of the perceptual loss term. Given a latent code we must determine the resulting feature so we can evaluate its deviation from `c2`, the intended feature value. We use the decoder of the original VAE model to get the value of the feature (via `decodeFeatures`) but to successfully back-propagate this loss term we also need its gradient. Because of the complexity of this term its gradient is unavailable through the pyTorch auto-differentiation framework. Therefore we use separate "Z to C" neural network as a surrogate to approximate the gradient. This is trained on the original data, but will be smoother than the true gradient since it doesn't see invalid states that are sometimes generated by the VAE decoder.
  
 Many data files are generated during the training and testing of SeNT models. These include:
 
