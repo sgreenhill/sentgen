@@ -68,14 +68,3 @@ The following presents the results all model types and hyperparmaeter settings (
 * [Correlations for all 12 model settings](v1e/table-r2.csv)
 * [Target Density Ratio for all 12 model settings](v1e/table-valid.csv)
 
-
-     "tonic",
-        "octave",
-        "scale",
-        "rhythm_bar1",
-        "rhythm_bar2",
-        "arp_chord1",
-        "arp_chord2",
-        "arp_chord3",
-        "arp_chord4"
-
