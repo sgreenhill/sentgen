@@ -14,7 +14,7 @@ We demonstrate the SeNT method using the [dMelodies data-set](https://github.com
 
 * Install `anaconda` or `miniconda` as described [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). For reference, this software was developed using miniconda (version 4.10.3) with python 3.7.2.
 
-* Install the git lfs extension as described [here](https://git-lfs.github.com/).
+* Re-running these experiments from scratch will require a lot of computing time on large machines. As a short-cut we have provided some pre-built data which can be used as described below. These large files (around 1.5Gb in the "prebuilt" directory)  are stored on Git-LFS. To retreive these files (and the original dmelodies data set) ensure that you install the Git LFS extension as described [here](https://git-lfs.github.com/). Otherwise, the repository will be retreived with pointers to these large files.
 
 * Clone this repository using the `--recurse-submodules` flag, which will automatically include the required sub-modules: *dmelodies_dataset* and *dmelodies_controllability*.
 
@@ -104,7 +104,7 @@ This script calls `src/Evaluate.py` which manages the above tasks efficiently us
 
 ### 5) Performance Analysis and Post-processing
 
-Analysis of the training results is mainly done via `src/Perform.py` though some outputs are generated using other tools. The version of matplotlib used is incompatible with the numpy/pyTorch/matplotlib combination of the dmelodies environment, so this process must be run in a separate environment. To build the environment:
+Analysis of the training results is done by `src/Perform.py` though some outputs are generated using other tools (gnuplot, gs, image-magick). The version of matplotlib used is incompatible with the numpy/pyTorch/matplotlib combination of the dmelodies environment, so this process must be run in a separate environment. To build the environment:
 ```
 conda env create -f scripts/post/environment.yml
 conda activate post
@@ -117,7 +117,7 @@ post.sh run1e
 
 Results in the form of pdf and csv files are generated in `data/run1e`.
 
-[The results directory](results) includes some sample results, and an explanation of additional results that are not included in the original
+[The results directory](results) includes some sample results, and an explanation of additional results that are not included in the original paper.
 
 ## Contents
 
