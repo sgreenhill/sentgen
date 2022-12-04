@@ -41,7 +41,7 @@ Please first review the included `#SBATCH` options and adjust for your local sys
 
 ### 2) Train the dMelodies VAE Models
 
-We use the VAE models published in [dmelodies_controllability](https://github.com/ashispati/dmelodies_controllability). These should be trained using the original scripts. Our forked version modifies the process slightly, to allow more control of partitioning of the data between training, validation and testing. The original hard-codes a 71/20/10 split, but this does not leave enough data for training our secondary SeNT neural network model. We introduced the --split option to allow an alternative split.
+We use the VAE models published in [dmelodies_controllability](https://github.com/ashispati/dmelodies_controllability). These should be trained using the original scripts. Our forked version modifies the process slightly, to allow more control of partitioning of the data between training, validation and testing. The original hard-codes a 70/20/10 split, but this does not leave enough data for training our secondary SeNT neural network model. We introduced the --split option to allow an alternative split.
 
 To build the VAE models from scratch:
 
@@ -68,10 +68,12 @@ To build this data from scratch:
 scripts/make-training-data.sh
 ```
 
-This is a lengthy process. Alternatively, to install the pre-built data:
+This is a lengthy process. <s>Alternatively, to install the pre-built data:
 ```
 tar xzf prebuilt/gen.tar.gz
 ```
+</s>
+*(Sorry, this file removed due to storage limit.)*
 
 ### 4) Training and testing the SeNT Models
 
